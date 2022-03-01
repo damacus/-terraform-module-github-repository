@@ -14,8 +14,8 @@ variable "projects_enabled" {
 variable "repo_type" {
   type = string
   validation {
-    condition     = can(regex("^cookbook|terraform|ide|other$", var.repo_type))
-    error_message = "The repo_type must be cookbook, terraform, ide or other. Case sensitive."
+    condition     = can(regex("^cookbook|terraform|ide|ruby_gem|other$", var.repo_type))
+    error_message = "The repo_type must be cookbook, terraform, ide, ruby_gem or other. Case sensitive."
   }
 }
 variable "description_override" {
@@ -45,9 +45,16 @@ locals {
   // status checks only
   default_status_checks    = ["lint-unit / mdl", "lint-unit / yamllint"]
   chef_status_checks       = var.repo_type == "cookbook" ? ["lint-unit / cookstyle", "Changelog Validator", "Metadata Version Validator", "Release Label Validator"] : []
+  gem_status_checks        = var.repo_type == "ruby_gem" ? ["linters / yamllint"] : []
   terraform_status_checks  = var.repo_type == "terraform" ? ["terraform-lint", "Terraform Cloud/sous-chefs/${var.name}"] : []
   additional_status_checks = var.additional_status_checks != null ? var.additional_status_checks : []
-  status_checks            = distinct(compact(concat(local.default_status_checks, local.chef_status_checks, local.terraform_status_checks, local.additional_status_checks)))
+  status_checks = distinct(compact(concat(
+    local.default_status_checks,
+    local.chef_status_checks,
+    local.gem_status_checks,
+    local.terraform_status_checks,
+    local.additional_status_checks
+  )))
 }
 
 locals {
