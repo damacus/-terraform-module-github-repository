@@ -3,20 +3,21 @@ resource "github_repository" "this" {
   description  = local.description
   homepage_url = local.homepage_url
 
-  visibility             = "public"
-  has_issues             = true
-  has_wiki               = false
-  has_projects           = var.projects_enabled
+  allow_auto_merge       = true
   allow_merge_commit     = false
   allow_squash_merge     = true
   allow_rebase_merge     = false
-  delete_branch_on_merge = true
-  has_downloads          = false
   archived               = false
+  archive_on_destroy     = true
+  delete_branch_on_merge = true
+  has_issues             = true
+  has_projects           = var.projects_enabled
+  has_wiki               = false
+  has_downloads          = false
   topics                 = local.topics
   auto_init              = true
   license_template       = "apache-2.0"
-  archive_on_destroy     = true
+  visibility             = "public"
   vulnerability_alerts   = true
 }
 
@@ -37,9 +38,7 @@ resource "github_branch_protection" "default" {
   # when a repo is being initialized/created you can run into race conditions
   # by adding an explicit depends we force the repo to be created
   # before it attempts to add branch protection
-  depends_on = [
-    github_repository.this,
-  ]
+  depends_on = [github_repository.this]
 
   required_status_checks {
     strict   = true
@@ -58,11 +57,13 @@ resource "github_team_repository" "maintainer_access" {
   repository = github_repository.this.name
   permission = "push"
 }
+
 resource "github_team_repository" "bot_access" {
   team_id    = "bots"
   repository = github_repository.this.name
   permission = "admin"
 }
+
 resource "github_team_repository" "board_access" {
   team_id    = "board"
   repository = github_repository.this.name
