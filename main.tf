@@ -47,7 +47,7 @@ resource "github_branch_protection" "default" {
 
   required_pull_request_reviews {
     dismiss_stale_reviews      = true
-    require_code_owner_reviews = false
+    require_code_owner_reviews = var.require_code_owner_reviews
   }
 
 }
