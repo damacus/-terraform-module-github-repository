@@ -7,10 +7,11 @@ variable "supermarket_name_override" {
   type    = string
 }
 
-variable "projects_enabled" {
+variable "has_projects" {
   type    = bool
   default = false
 }
+
 variable "repo_type" {
   type = string
   validation {
@@ -44,9 +45,8 @@ variable "require_code_owner_reviews" {
   default = false
 }
 
-
 locals {
-  // supermarket_name
+  // Chef Supermarket name
   supermarket_name = var.supermarket_name_override == null ? var.name : var.supermarket_name_override
 
   // Satus checks

@@ -2,7 +2,8 @@
 
 ## Example Usage
 
-The following example loops through the Json below and creates  repository and checks for each
+The following example loops through the Json below and creates a repository and
+checks for each.
 
 ```json
 {

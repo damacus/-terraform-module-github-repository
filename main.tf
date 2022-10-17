@@ -11,8 +11,8 @@ resource "github_repository" "this" {
   archive_on_destroy     = true
   delete_branch_on_merge = true
   has_issues             = true
-  has_projects           = var.projects_enabled
-  has_wiki               = false
+  has_projects           = var.has_projects
+  has_wiki               = var.has_wiki
   has_downloads          = false
   topics                 = local.topics
   auto_init              = true
@@ -49,7 +49,6 @@ resource "github_branch_protection" "default" {
     dismiss_stale_reviews      = true
     require_code_owner_reviews = var.require_code_owner_reviews
   }
-
 }
 
 resource "github_team_repository" "maintainer_access" {
